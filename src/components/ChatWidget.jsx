@@ -6,7 +6,7 @@ const CONFIG = {
   businessName: 'NurtureClose',
   agentName: 'Sarah',
   tagline: 'Typically replies instantly',
-  welcomeMsg: "Hi, this is Sarah. How can I help you?",
+  welcomeMsg: "Welcome, this is Sarah! How can I assist you today?",
   quickReplies: [],
   placeholder: 'Type your message…',
 };
