@@ -236,17 +236,30 @@
   letter-spacing: 0.2px;
 }
 
-.chat-widget-container .header-badge {
-  font-size: 10px;
-  font-weight: 500;
-  background: rgba(107, 143, 113, 0.3);
-  color: #A8D4AC;
-  padding: 4px 10px;
-  border-radius: 20px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  border: 1px solid rgba(107, 143, 113, 0.35);
+.chat-widget-container .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   z-index: 10;
+}
+
+.chat-widget-container .header-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chat-widget-container .header-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
 }
 
 /* ─── MESSAGE AREA ─── */

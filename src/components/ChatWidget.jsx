@@ -69,6 +69,18 @@ export default function ChatWidget() {
     }
   };
 
+  const resetChat = () => {
+    // Generate new session ID to clear n8n history context
+    const newSession = 'session_' + Math.random().toString(36).slice(2, 11);
+    localStorage.setItem('kimberley_session', newSession);
+    sessionId.current = newSession;
+    
+    // Reset local UI state
+    setMessages([{ role: 'bot', text: CONFIG.welcomeMsg, time: getTime() }]);
+    setQuickReplies(CONFIG.quickReplies);
+    setIsTyping(false);
+  };
+
   const sendMessage = async (text) => {
     if (!text.trim() || isTyping) return;
     setIsOpen(true);
@@ -179,7 +191,20 @@ export default function ChatWidget() {
             <div className="header-name">{CONFIG.agentName}</div>
             <div className="header-sub">{CONFIG.tagline}</div>
           </div>
-          <span className="header-badge">Live</span>
+          <div className="header-actions">
+            <button className="header-btn" onClick={resetChat} title="Reset Chat" aria-label="Reset Chat">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+              </svg>
+            </button>
+            <button className="header-btn" onClick={handleOpenToggle} title="Close Chat" aria-label="Close Chat">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Message Area */}
