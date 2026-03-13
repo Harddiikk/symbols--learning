@@ -275,7 +275,7 @@ export default function ChatWidget() {
               </svg>
             </button>
           </div>
-          <div className="input-footer">Powered by <a href="#">{CONFIG.businessName}</a></div>
+          <div className="input-footer">Powered by <a href="https://nurtureclose.com/" target="_blank" rel="noopener noreferrer">{CONFIG.businessName}</a></div>
         </div>
       </div>
     </div>
