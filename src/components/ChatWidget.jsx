@@ -4,9 +4,9 @@ import './ChatWidget.css'; // Import the design system
 const CONFIG = {
   webhookUrl: 'https://n8n.srv1384642.hstgr.cloud/webhook/cba8924b-5b5e-4c09-949f-0870a20b9e67/chat',
   businessName: 'NurtureClose',
-  agentName: 'Symbols Assistant',
+  agentName: 'Sarah',
   tagline: 'Typically replies instantly',
-  welcomeMsg: "Welcome to Symbols Learning, how can I assist you?",
+  welcomeMsg: "Hi, this is Sarah. How can I help you?",
   quickReplies: [],
   placeholder: 'Type your message…',
 };
@@ -159,8 +159,8 @@ export default function ChatWidget() {
     const withBreaks = escaped.split('\\n').join('<br>').split('\n').join('<br>');
     
     // Convert hyphened lists to structured arrays for cleaner layout spacing
-    // If it detects hyphens at the start of lines, we'll wrap them nicely.
-    return withBreaks.replace(/(?:<br>\s*-\s*|^\s*-\s*)(.+?)(?=<br>\s*-|$)/g, '<div class="list-item"><span>•</span> <span>$1</span></div>');
+    // We isolate just the line with the hyphen to ensure subsequent paragraphs remain normal text
+    return withBreaks.replace(/(?:<br>\s*-\s*|^\s*-\s*)(.*?)(?=<br>|$)/g, '<div class="list-item"><span>•</span> <span>$1</span></div>');
   };
 
   return (
@@ -172,7 +172,7 @@ export default function ChatWidget() {
       {/* Floating Trigger Button with Tooltip */}
       <div className={`embed-tooltip-wrap ${isOpen ? 'hidden' : ''}`}>
         <div className="embed-tooltip">How can I help you? 👋</div>
-        <button className="embed-trigger" onClick={handleOpenToggle} aria-label="Chat with Symbols Assistant">
+        <button className="embed-trigger" onClick={handleOpenToggle} aria-label="Chat with Sarah">
           <span className="trigger-avatar">S</span>
           {unreadCount > 0 && <span className="notif-dot">{unreadCount}</span>}
         </button>
@@ -261,7 +261,7 @@ export default function ChatWidget() {
               onKeyDown={handleKeyDown}
               placeholder={CONFIG.placeholder}
               rows={1}
-              aria-label="Message Symbols Assistant"
+              aria-label="Message Sarah"
             />
             <button 
               className="send-btn" 
