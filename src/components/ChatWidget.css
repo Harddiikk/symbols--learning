@@ -29,12 +29,57 @@
 }
 
 /* ─── EMBED WIDGET (floating bubble) ─── */
-.chat-widget-container .embed-trigger {
+.chat-widget-container .embed-tooltip-wrap {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  width: 60px;
-  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 9999;
+}
+
+.chat-widget-container .embed-tooltip-wrap.hidden {
+  display: none;
+}
+
+.chat-widget-container .embed-tooltip {
+  background: white;
+  color: var(--ink);
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: var(--shadow-soft);
+  position: relative;
+  animation: floatTooltip 3s ease-in-out infinite;
+  white-space: nowrap;
+}
+
+/* Tooltip Caret */
+.chat-widget-container .embed-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -6px;
+  transform: translateY(-50%);
+  border-width: 6px 0 6px 6px;
+  border-style: solid;
+  border-color: transparent transparent transparent white;
+  display: block;
+  width: 0;
+}
+
+@keyframes floatTooltip {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.chat-widget-container .embed-trigger {
+  position: relative; /* Changed from fixed because it is inside the wrap now */
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   background: linear-gradient(135deg, #2C2C2C 0%, #3d3d3a 100%);
   box-shadow: 0 4px 20px rgba(44, 44, 44, 0.30);
@@ -80,10 +125,12 @@
 .chat-widget-container .embed-card {
   display: none;
   position: fixed;
-  bottom: 96px;
+  bottom: 104px;
   right: 24px;
-  width: 380px;
-  height: 560px;
+  width: 420px;
+  height: 680px;
+  max-width: calc(100vw - 48px);
+  max-height: calc(100vh - 120px);
   z-index: 9998;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lift);
@@ -275,28 +322,39 @@
 }
 
 .chat-widget-container .msg-avatar {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--sage) 0%, #8aad8f 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 14px;
   color: white;
   flex-shrink: 0;
   margin-bottom: 2px;
 }
 
 .chat-widget-container .bubble {
-  max-width: 75%;
-  padding: 11px 15px;
-  font-size: 14px;
+  max-width: 85%;
+  padding: 14px 18px;
+  font-size: 15px;
   line-height: 1.55;
   font-weight: 400;
   position: relative;
   text-align: left;
+}
+
+.chat-widget-container .bubble strong {
+  font-weight: 600;
+}
+
+.chat-widget-container .bubble .list-item {
+  display: flex;
+  margin-top: 6px;
+  gap: 8px;
+  align-items: flex-start;
 }
 
 .chat-widget-container .msg-row.bot .bubble {

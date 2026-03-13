@@ -3,11 +3,11 @@ import './ChatWidget.css'; // Import the design system
 
 const CONFIG = {
   webhookUrl: 'https://n8n.srv1384642.hstgr.cloud/webhook/cba8924b-5b5e-4c09-949f-0870a20b9e67/chat',
-  businessName: 'PulseReach',
-  agentName: 'Kimberley',
-  tagline: 'Tutoring Assistant · Typically replies instantly',
-  welcomeMsg: "Hi there! 👋 I'm Kimberley, your tutoring assistant. Are you a new student, an existing student, or a parent?",
-  quickReplies: ["I'm a new student", "I'm an existing student", "I'm a parent"],
+  businessName: 'NurtureClose',
+  agentName: 'Symbols Assistant',
+  tagline: 'Typically replies instantly',
+  welcomeMsg: "Welcome to Symbols Learning, how can I assist you?",
+  quickReplies: [],
   placeholder: 'Type your message…',
 };
 
@@ -71,6 +71,7 @@ export default function ChatWidget() {
 
   const sendMessage = async (text) => {
     if (!text.trim() || isTyping) return;
+    setIsOpen(true);
 
     // Remove any active quick replies immediately
     setQuickReplies([]);
@@ -133,13 +134,21 @@ export default function ChatWidget() {
     }
   };
 
-  // Helper to safely format text (bolding)
+  // Helper to safely format text (bolding, line breaks, and list mapping)
   const formatText = (text) => {
+    if (!text) return '';
     // Escape HTML first
-    const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    // Then bold matches
-    const bolded = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    return bolded.split('\\n').join('<br>'); 
+    let escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    
+    // Bold matches
+    escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Convert newlines to breaks
+    const withBreaks = escaped.split('\\n').join('<br>').split('\n').join('<br>');
+    
+    // Convert hyphened lists to structured arrays for cleaner layout spacing
+    // If it detects hyphens at the start of lines, we'll wrap them nicely.
+    return withBreaks.replace(/(?:<br>\s*-\s*|^\s*-\s*)(.+?)(?=<br>\s*-|$)/g, '<div class="list-item"><span>•</span> <span>$1</span></div>');
   };
 
   return (
@@ -148,11 +157,14 @@ export default function ChatWidget() {
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet" />
 
-      {/* Floating Trigger Button */}
-      <button className="embed-trigger" onClick={handleOpenToggle} aria-label="Chat with Kimberley">
-        <span className="trigger-avatar">K</span>
-        {unreadCount > 0 && <span className="notif-dot">{unreadCount}</span>}
-      </button>
+      {/* Floating Trigger Button with Tooltip */}
+      <div className={`embed-tooltip-wrap ${isOpen ? 'hidden' : ''}`}>
+        <div className="embed-tooltip">How can I help you? 👋</div>
+        <button className="embed-trigger" onClick={handleOpenToggle} aria-label="Chat with Symbols Assistant">
+          <span className="trigger-avatar">S</span>
+          {unreadCount > 0 && <span className="notif-dot">{unreadCount}</span>}
+        </button>
+      </div>
 
       {/* Main Chat Panel */}
       <div className={`embed-card ${isOpen ? 'open' : ''}`}>
@@ -160,7 +172,7 @@ export default function ChatWidget() {
         {/* Header */}
         <div className="chat-header">
           <div className="avatar-wrap">
-            <div className="avatar">K</div>
+            <div className="avatar">S</div>
             <div className="status-dot"></div>
           </div>
           <div className="header-text">
@@ -176,7 +188,7 @@ export default function ChatWidget() {
           
           {messages.map((msg, idx) => (
             <div key={idx} className={`msg-row ${msg.role}`}>
-               {msg.role === 'bot' && <div className="msg-avatar">K</div>}
+               {msg.role === 'bot' && <div className="msg-avatar">S</div>}
                <div>
                  <div className="bubble" dangerouslySetInnerHTML={{ __html: formatText(msg.text) }} />
                  <div className="msg-time">{msg.time}</div>
@@ -202,7 +214,7 @@ export default function ChatWidget() {
           {/* Typing Indicator */}
           {isTyping && (
             <div className="typing-row">
-              <div className="msg-avatar">K</div>
+              <div className="msg-avatar">S</div>
               <div className="typing-bubble">
                 <div className="typing-dot"></div>
                 <div className="typing-dot"></div>
@@ -224,7 +236,7 @@ export default function ChatWidget() {
               onKeyDown={handleKeyDown}
               placeholder={CONFIG.placeholder}
               rows={1}
-              aria-label="Message Kimberley"
+              aria-label="Message Symbols Assistant"
             />
             <button 
               className="send-btn" 
