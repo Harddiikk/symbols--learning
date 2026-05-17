@@ -30,6 +30,7 @@ export default function ChatWidget() {
   const [quickReplies, setQuickReplies] = useState([]);
   
   const messagesEndRef = useRef(null);
+  const textareaRef = useRef(null);
   const sessionId = useRef(getSessionId());
   const initialized = useRef(false);
 
@@ -91,6 +92,7 @@ export default function ChatWidget() {
     // Add User Message
     setMessages(prev => [...prev, { role: 'user', text: text.trim(), time: getTime() }]);
     setInputValue('');
+    resetTextareaHeight();
     setIsTyping(true);
 
     try {
@@ -136,6 +138,19 @@ export default function ChatWidget() {
         text: "Sorry, I'm having a little trouble connecting. Please try again in a moment.", 
         time: getTime() 
       }]);
+    }
+  };
+
+  const handleTextareaChange = (e) => {
+    setInputValue(e.target.value);
+    const ta = e.target;
+    ta.style.height = 'auto';
+    ta.style.height = Math.min(ta.scrollHeight, 100) + 'px';
+  };
+
+  const resetTextareaHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
     }
   };
 
@@ -260,9 +275,10 @@ export default function ChatWidget() {
         <div className="input-area">
           <div className="input-row">
             <textarea
+              ref={textareaRef}
               className="chat-input"
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={handleTextareaChange}
               onKeyDown={handleKeyDown}
               placeholder={CONFIG.placeholder}
               rows={1}
