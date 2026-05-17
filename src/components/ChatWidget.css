@@ -363,6 +363,19 @@
   font-weight: 600;
 }
 
+.chat-widget-container .bubble strong.msg-heading {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 2px;
+  font-size: 14px;
+  color: var(--ink);
+  letter-spacing: 0.1px;
+}
+
+.chat-widget-container .bubble strong.msg-heading:first-child {
+  margin-top: 0;
+}
+
 .chat-widget-container .bubble .list-item {
   display: flex;
   margin-top: 6px;

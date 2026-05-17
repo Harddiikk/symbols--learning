@@ -4,9 +4,9 @@ import './ChatWidget.css'; // Import the design system
 const CONFIG = {
   webhookUrl: 'https://n8n.srv1384642.hstgr.cloud/webhook/cba8924b-5b5e-4c09-949f-0870a20b9e67/chat',
   businessName: 'NurtureClose',
-  agentName: 'Sarah',
+  agentName: 'Symbols Assistant',
   tagline: 'Typically replies instantly',
-  welcomeMsg: "Welcome, this is Sarah! How can I assist you today?",
+  welcomeMsg: "Hi! I'm the Symbols Learning assistant. I can answer questions about our programs or help you book a free consultation with Kimberley. What can I help you with?",
   quickReplies: [],
   placeholder: 'Type your message…',
 };
@@ -146,20 +146,25 @@ export default function ChatWidget() {
     }
   };
 
-  // Helper to safely format text (bolding, line breaks, and list mapping)
+  // Helper to safely format text (markdown → HTML)
   const formatText = (text) => {
     if (!text) return '';
     // Escape HTML first
     let escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    
-    // Bold matches
+
+    // Strip horizontal rules (--- or ***)
+    escaped = escaped.replace(/^[-*]{3,}\s*$/gm, '');
+
+    // Convert markdown headers (### ## #) to bold labels
+    escaped = escaped.replace(/^#{1,3}\s+(.+)$/gm, '<strong class="msg-heading">$1</strong>');
+
+    // Bold (**text**)
     escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    
+
     // Convert newlines to breaks
     const withBreaks = escaped.split('\\n').join('<br>').split('\n').join('<br>');
-    
-    // Convert hyphened lists to structured arrays for cleaner layout spacing
-    // We isolate just the line with the hyphen to ensure subsequent paragraphs remain normal text
+
+    // Convert "- item" hyphen lists to bullet items
     return withBreaks.replace(/(?:<br>\s*-\s*|^\s*-\s*)(.*?)(?=<br>|$)/g, '<div class="list-item"><span>•</span> <span>$1</span></div>');
   };
 
@@ -172,8 +177,8 @@ export default function ChatWidget() {
       {/* Floating Trigger Button with Tooltip */}
       <div className={`embed-tooltip-wrap ${isOpen ? 'hidden' : ''}`}>
         <div className="embed-tooltip">How can I help you? 👋</div>
-        <button className="embed-trigger" onClick={handleOpenToggle} aria-label="Chat with Sarah">
-          <span className="trigger-avatar">S</span>
+        <button className="embed-trigger" onClick={handleOpenToggle} aria-label={`Chat with ${CONFIG.agentName}`}>
+          <span className="trigger-avatar">{CONFIG.agentName[0]}</span>
           {unreadCount > 0 && <span className="notif-dot">{unreadCount}</span>}
         </button>
       </div>
@@ -184,7 +189,7 @@ export default function ChatWidget() {
         {/* Header */}
         <div className="chat-header">
           <div className="avatar-wrap">
-            <div className="avatar">S</div>
+            <div className="avatar">{CONFIG.agentName[0]}</div>
             <div className="status-dot"></div>
           </div>
           <div className="header-text">
@@ -213,7 +218,7 @@ export default function ChatWidget() {
           
           {messages.map((msg, idx) => (
             <div key={idx} className={`msg-row ${msg.role}`}>
-               {msg.role === 'bot' && <div className="msg-avatar">S</div>}
+               {msg.role === 'bot' && <div className="msg-avatar">{CONFIG.agentName[0]}</div>}
                <div>
                  <div className="bubble" dangerouslySetInnerHTML={{ __html: formatText(msg.text) }} />
                  <div className="msg-time">{msg.time}</div>
@@ -239,7 +244,7 @@ export default function ChatWidget() {
           {/* Typing Indicator */}
           {isTyping && (
             <div className="typing-row">
-              <div className="msg-avatar">S</div>
+              <div className="msg-avatar">{CONFIG.agentName[0]}</div>
               <div className="typing-bubble">
                 <div className="typing-dot"></div>
                 <div className="typing-dot"></div>
@@ -261,7 +266,7 @@ export default function ChatWidget() {
               onKeyDown={handleKeyDown}
               placeholder={CONFIG.placeholder}
               rows={1}
-              aria-label="Message Sarah"
+              aria-label={`Message ${CONFIG.agentName}`}
             />
             <button 
               className="send-btn" 
